@@ -1,10 +1,8 @@
 obj-m := malefik.o
-CC := gcc -Wall
-DIR := /lib/modules/$(shell uname -r)/build
-PWD := $(shell pwd)
+KERNEL_ROOT=/lib/modules/5.11.0-49-generic/build
 
-all:
-	make -C $(DIR) M=$(PWD) modules
+modules:
+	@$(MAKE) -C $(KERNEL_ROOT) M=$(shell pwd) modules
 
 clean:
-	make -C $(DIR) M=$(PWD) clean
+	@$(MAKE) -C $(KERNEL_ROOT) M=$(shell pwd) clean
