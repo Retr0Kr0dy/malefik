@@ -1,5 +1,5 @@
 obj-m := malefik.o
-KERNEL_ROOT=/lib/modules/5.11.0-49-generic/build
+KERNEL_ROOT=/lib/modules/$(shell uname -r)/build
 
 modules:
 	@$(MAKE) -C $(KERNEL_ROOT) M=$(shell pwd) modules
