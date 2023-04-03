@@ -8,8 +8,6 @@
 #include <linux/cred.h>		
 #include <linux/fs.h>           
 #include <linux/cdev.h>         
-#include <linux/device.h>       
-#include <linux/device/class.h> 
 #include <linux/uaccess.h>      
 #include <linux/ioctl.h>        
 #include <linux/syscalls.h>     
