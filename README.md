@@ -8,11 +8,11 @@ Working Gracefully !!!
 
 ### on 4.19 kernel (Debian 10)
 
-...
+Working Gracefully !!!
 
 ### on 4.9 kernel (Debian 9)
 
-...
+Kernel kill me
 
 
 ## Usage :
