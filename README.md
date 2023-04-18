@@ -1,5 +1,5 @@
-*Learning C purpose*
-# malefik
+*Learning C purpose* 
+# <b>malefik</b> 
 Malicious LKM for multiple kernel, simple rootkit (bitflip, hidep, SIGRAPE, ...)
 
 ### on 5.10 kernel (Debian 11)
@@ -13,6 +13,22 @@ Working Gracefully !!!
 ### on 4.9 kernel (Debian 9)
 
 Kernel kill me
+
+
+## Install :
+
+Instaal with 
+```sh
+sudo make
+```
+For debug mode (verbose)
+```sh
+sudo make debug
+```
+For cleaning the rootkit
+```sh
+sudo make clean
+```
 
 
 ## Usage :
