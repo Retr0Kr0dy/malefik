@@ -12,5 +12,5 @@ modules:
 
 clean:
 #	modprobe -r malefik
-	rmmod malefik.ko
+	rmmod malefik
 	@$(MAKE) -C $(KERNEL_ROOT) M=$(shell pwd) clean
