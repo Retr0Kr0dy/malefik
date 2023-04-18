@@ -1,23 +1,30 @@
 *Learning C purpose* 
 # <b>malefik</b> 
-Malicious LKM for multiple kernel, simple rootkit (bitflip, hidep, SIGRAPE, ...)
+Malicious LKM, simple rootkit for studiying purpose [...].
 
-### on 5.10 kernel (Debian 11)
-
-Working Gracefully !!!
-
-### on 4.19 kernel (Debian 10)
-
-Working Gracefully !!!
-
-### on 4.9 kernel (Debian 9)
-
-Kernel kill me
-
+## Affected vesion :
+|kernel ver.|state|
+|-|-|
+|`5.10`|affected|
+|`4.19`|affected|
+|`4.15`|affected|
+|`4.9`|affected|
 
 ## Install :
+### `!!! TEMP !!!`
+Install linux headers for your version, check it with `uname -r`.
 
-Instaal with 
+With apt (debian, ...)
+```sh
+sudo apt install linux-headers-$(uname -r)
+```
+With dnf (fedora, ...)
+```sh
+ sudo dnf install kernel-headers
+```
+
+### `!!! ENDTEMP !!!`
+Install with
 ```sh
 sudo make
 ```
@@ -25,17 +32,15 @@ For debug mode (verbose)
 ```sh
 sudo make debug
 ```
-For cleaning the rootkit
+For cleaning
 ```sh
 sudo make clean
 ```
 
-
 ## Usage :
-
 malefik redirect some kill signals to do something special things for you UwU.
 
-Such as;
+Such as
 ```
 kill -64 <pid> : Escalate to root shell.
 kill -31 <pid> : Hide/unhide process.
