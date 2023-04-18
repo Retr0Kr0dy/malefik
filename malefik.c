@@ -52,11 +52,11 @@ MODULE_DESCRIPTION("fuck you linus");
 MODULE_VERSION("6.6.6");
 
 /* PRINT FOR DEBUG */
-int mprintk(int DEBUG, char* string)
+int mprintk(int DEBUG, fmt)
 {
 	if (DEBUG)
 	{
-		printk(KERN_INFO, string);
+		printk(KERN_INFO fmt);
 	}
 }
 
