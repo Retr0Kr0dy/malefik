@@ -149,7 +149,6 @@ unsigned long *get_syscall_table(void)
 	return syscall_table;
 }
 
-
 /* FORCE CR0 */
 static inline void write_cr0_forced(unsigned long val)
 {
