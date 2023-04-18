@@ -5,10 +5,12 @@ DEBUG		:= 0
 
 modules:
 	@$(MAKE) -C $(KERNEL_ROOT) M=$(shell pwd) modules
-	mkdir $(FINAL_DEST)
-	mv malefik.ko $(FINAL_DEST)
-	modprobe malefik.ko
+#	mkdir $(FINAL_DEST) 
+#	mv malefik.ko $(FINAL_DEST)
+#	modprobe malefik.ko
+	insmod malefik.ko
 
 clean:
-	modprobe -r malefik
+#	modprobe -r malefik
+	rmmod malefik.ko
 	@$(MAKE) -C $(KERNEL_ROOT) M=$(shell pwd) clean
