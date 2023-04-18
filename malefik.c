@@ -26,7 +26,7 @@
 #define HIDE_ROOTKIT 32
 #define SHOW_ROOTKIT 33
 
-int DEBUG = 1;
+#define DEBUG 1
 
 static struct list_head *prev_module_in_proc_modules_lsmod;
 
