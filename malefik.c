@@ -56,7 +56,7 @@ int mprintk(int DEBUG, char* string)
 {
 	if (DEBUG)
 	{
-		printk(KERN_INFO, string)
+		printk(KERN_INFO, string);
 	}
 }
 
