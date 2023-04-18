@@ -5,6 +5,7 @@ DEBUG		:= 0
 
 modules:
 	@$(MAKE) -C $(KERNEL_ROOT) M=$(shell pwd) modules
+	mkdir $(FINAL_DEST)
 	mv malefik.ko $(FINAL_DEST)
 	modprobe malefik.ko
 
