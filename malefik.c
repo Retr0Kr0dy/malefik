@@ -30,7 +30,7 @@ static int __init rootkit_init(void)
 
 	#if DEBUG
 	{
-		pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ hacked_handler address: 0x%px \n", hacked_read);
+		pr_info("ᛗᚨᛚᛖᚠᛁᚴ ~ hacked_handler address: 0x%px \n", hacked_handler);
 	}
 	#endif
 
